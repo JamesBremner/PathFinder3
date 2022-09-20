@@ -25,18 +25,25 @@ OPT = -g
 CCflags = -std=c++17 $(OPT) -D_mingw_
 
 # sources
-OBJ_starter = \
-	$(ODIR)/main.o 
+OBJ_pathtest = \
+	$(ODIR)/pathtest.o \
+	 $(ODIR)/cPathFinder.o $(ODIR)/cPathFinderReader.o $(ODIR)/cGraph.o \
+	 $(ODIR)/cMaze.o $(ODIR)/Karger.o \
+	 $(ODIR)/cRunWatch.o
 
 ### COMPILE
 
-$(ODIR)/%.o: %.cpp  
+$(ODIR)/cRunWatch.o :
+	g++ -o $@ -c ../raven-set/cRunWatch.cpp \
+	$(INCS) $(CCflags) 
+
+$(ODIR)/%.o: %.cpp cGraph.h
 	g++  $(CCflags) \
 	-c -o $@ $< $(INCS)
 
-starter: $(OBJ_starter)
+pathtest: $(OBJ_pathtest)
 	g++ $(OPT) \
-	-o bin/starter.exe $^  \
+	-o bin/pathtest.exe $^  \
 	$(static_link_flags) $(LIBS)
 
 .PHONY: clean
