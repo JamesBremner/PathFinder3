@@ -31,6 +31,11 @@ OBJ_pathtest = \
 	 $(ODIR)/cMaze.o $(ODIR)/Karger.o \
 	 $(ODIR)/cRunWatch.o
 
+OBJ_pathgui = \
+	$(ODIR)/pathgui.o \
+	 $(ODIR)/cPathFinder.o $(ODIR)/cPathFinderReader.o $(ODIR)/cGraph.o \
+	 $(ODIR)/cMaze.o $(ODIR)/cRunWatch.o
+
 ### COMPILE
 
 $(ODIR)/cRunWatch.o :
@@ -44,6 +49,11 @@ $(ODIR)/%.o: %.cpp cGraph.h
 pathtest: $(OBJ_pathtest)
 	g++ $(OPT) \
 	-o bin/pathtest.exe $^  \
+	$(static_link_flags) $(LIBS)
+
+pathgui: $(OBJ_pathgui)
+	g++ $(OPT) \
+	-o bin/pathgui.exe $^  \
 	$(static_link_flags) $(LIBS)
 
 .PHONY: clean
