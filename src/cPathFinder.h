@@ -308,6 +308,7 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
              * @param[in] visitor function to call on each new node visited
              */
             void depthFirst(int v, std::function<void(int v)> visitor);
+            void depthFirstOwnStack(int v, std::function<void(int v)> visitor);
 
             /** Create a name for a grid node
              * @param[in] 0-based row position
@@ -337,6 +338,7 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
             std::string myResults;
 
             void depthRecurse(int v, std::function<void(int v)> visitor);
+
 
             /** Breadth First Search
              * @param[in] visitor function to call on each new node visited

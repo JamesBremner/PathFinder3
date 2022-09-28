@@ -3,6 +3,7 @@
 #include <queue>
 #include <set>
 #include <list>
+#include <stack>
 #include "cPathFinder.h"
 #include "cRunWatch.h"
 
@@ -67,7 +68,7 @@ namespace raven
                         continue;
 
                 // check if link between two nodes on path
-                bool onpath = isLinkOnPath( e );
+                bool onpath = isLinkOnPath(e);
 
                 if (all)
                 {
@@ -305,8 +306,8 @@ namespace raven
             int prev = end;
             while (1)
             {
-                std::cout << userName(prev) << " " 
-                    << userName(myPred[prev]) << ", ";
+                std::cout << userName(prev) << " "
+                          << userName(myPred[prev]) << ", ";
                 int next = myPred[prev];
                 myPath.push_back(next);
                 if (next == myStart)
@@ -318,8 +319,8 @@ namespace raven
             std::reverse(myPath.begin(), myPath.end());
 
             std::cout << "\npathpick dbg " << myPath.size() << " " << myDist.size()
-                      << " " << myPath.back() 
-                      << " cost " <<  myDist[myPath.back()] << "\n";
+                      << " " << myPath.back()
+                      << " cost " << myDist[myPath.back()] << "\n";
             for (auto d : myDist)
                 std::cout << d << " ";
             std::cout << "\n";
@@ -430,7 +431,29 @@ namespace raven
             myPath.resize(nodeCount(), 0);
             myPred.clear();
 
-            depthRecurse(v, visitor);
+            //depthRecurse(v, visitor);
+            depthFirstOwnStack(v, visitor);
+        }
+
+        void cPathFinder::depthFirstOwnStack(int v, std::function<void(int v)> visitor)
+        {
+            std::stack<int> stack;
+            stack.push(v);
+
+            while (!stack.empty())
+            {
+                int v = stack.top();
+                stack.pop();
+                
+                if (!myPath[v])
+                {
+                    visitor(v);
+                    myPath[v] = 1;
+                }
+                for (int w : adjacent(v))
+                    if (!myPath[w])
+                        stack.push(w);
+            }
         }
 
         void cPathFinder::depthRecurse(
@@ -493,27 +516,29 @@ namespace raven
                 tsp();
                 return;
             }
-            select( v );
+            select(v);
         }
-        void cPathFinder::select( const std::vector<int>& vVisit )
+        void cPathFinder::select(const std::vector<int> &vVisit)
         {
             cPathFinder gSelected;
-            for( int v : vVisit )
+            for (int v : vVisit)
             {
                 gSelected.findoradd(
-                    userName( v ) );
+                    userName(v));
             }
-            for( int v1 : vVisit ) {
+            for (int v1 : vVisit)
+            {
                 myStart = v1;
-                paths( v1 );
-                for( int v2 : vVisit ) {
-                    if( v2 <= v1 )
+                paths(v1);
+                for (int v2 : vVisit)
+                {
+                    if (v2 <= v1)
                         continue;
-                    pathPick( v2 );
+                    pathPick(v2);
                     gSelected.addLink(
                         userName(v1),
                         userName(v2),
-                        myPathCost );
+                        myPathCost);
                 }
             }
             std::cout << "select " << gSelected.linksText();
