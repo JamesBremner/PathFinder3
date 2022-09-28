@@ -143,6 +143,8 @@ namespace raven
             void addLinkFast(int u, int v)
             {
                 myG.find(u)->second.myLink.insert(std::make_pair(v, cLink()));
+                if (!myfDirected)
+                    myG.find(v)->second.myLink.insert(std::make_pair(u, cLink()));
             }
             /** Find node by name
              *

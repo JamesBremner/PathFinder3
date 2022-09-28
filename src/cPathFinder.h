@@ -33,6 +33,7 @@ namespace raven
             srcnuzn,
             pickup,
             allpaths,
+            mincut,
         };
 
         /** @brief general purpose path finder
@@ -253,6 +254,7 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
                 int &bestcutsize,
                 int &bestbalance,
                 int trialcount );
+            void KargerDo();
 
             /////////////////////// get text output ///////////////////////////////////////////
 

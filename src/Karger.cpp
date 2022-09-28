@@ -64,28 +64,32 @@ namespace raven
         cPathFinder::Karger(
             int &bestcutsize,
             int &bestbalance,
-            int trialCount )
+            int trialCount)
         {
             bestcutsize = linkCount();
-            bool fbalance = ( bestbalance > 0 );
+            bool fbalance = (bestbalance > 0);
             bestbalance = 0;
             auto best = *this;
             auto backup = *this;
 
-            srand(time(NULL));
+            //srand(time(NULL));
 
             for (int trial = 0; trial < trialCount; trial++)
             {
-                while (nodeCount() > 2)
+                while (nodeCount() > 2 && linkCount() > 0 )
                 {
                     // select random link to contract
                     auto m = links();
+                    int sz = m.size();
+                    int r = rand() % sz;
                     auto it = std::next(
                         m.begin(),
-                        rand() % m.size());
+                        r);
                     contract(
                         it->first.first,
                         it->first.second);
+
+                    std::cout << linksText() << "\n";
                 }
                 int cutsize = linkCount();
                 if (cutsize < bestcutsize)
@@ -110,6 +114,27 @@ namespace raven
                 *this = backup;
             }
             return best.KargerSplitContracted();
+        }
+        void cPathFinder::KargerDo()
+        {
+            std::cout << linksText() << "\n";
+
+            int mincutsize;
+            int minComponentSize;
+            auto vk = Karger(
+                mincutsize,
+                minComponentSize,
+                20);
+
+            std::cout << "******\nresult "
+                      << " cut size " << mincutsize
+                      << " size of minimum component " << minComponentSize << "\n";
+            for (auto &node : vk[0])
+                std::cout << node << " ";
+            std::cout << "\n";
+            for (auto &node : vk[1])
+                std::cout << node << " ";
+            std::cout << "\n";
         }
     }
 }
@@ -136,7 +161,7 @@ void KargerTest()
     auto vk = finder.Karger(
         mincutsize,
         minComponentSize,
-        20 );
+        20);
 
     std::cout << "******\nresult "
               << " cut size " << mincutsize

@@ -12,11 +12,40 @@
 
 void KargerTest();
 
+void DFStest()
+{
+    std::cout << "DFS test\n";
+    std::vector< std::string > visited;
+    std::vector< std::string > expected {
+        "0", "1", "12", "13", "14", "2" };
+    finder.clear();
+    finder.addLink("0","1");
+    finder.addLink("0","2");
+    finder.addLink("1","12");
+    finder.addLink("1","13");
+    finder.addLink("1","14");
+    finder.depthFirst(
+        finder.find("0"),
+        [&]( int v )
+        {
+            visited.push_back(finder.userName(v));
+        }    );
+
+    for( int k = 0; k < visited.size(); k++ )
+    {
+        std::cout << visited[k] << " ";
+        if( visited[k] != expected[k] )
+            std::cout << "FAILED!!!\n";
+    }
+}
+
 main()
 {
    std::string expected;
 
-    KargerTest();
+    //KargerTest();
+
+    DFStest();
 
     exit(0);
 

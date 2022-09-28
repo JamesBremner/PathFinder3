@@ -34,7 +34,8 @@ OBJ_pathtest = \
 OBJ_pathgui = \
 	$(ODIR)/pathgui.o \
 	 $(ODIR)/cPathFinder.o $(ODIR)/cPathFinderReader.o $(ODIR)/cGraph.o \
-	 $(ODIR)/cMaze.o $(ODIR)/cRunWatch.o
+	 $(ODIR)/cMaze.o $(ODIR)/Karger.o \
+	 $(ODIR)/cRunWatch.o
 
 ### COMPILE
 

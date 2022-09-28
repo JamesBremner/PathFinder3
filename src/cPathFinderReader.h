@@ -56,7 +56,7 @@ namespace raven
      * 
      * There is no error checking - intended for fast reading very large graphs
      */
-            void links();
+            void links(bool fdirected = true );
 
             void bonesi();
 

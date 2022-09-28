@@ -311,6 +311,9 @@ int main()
                         case eCalculation::allpaths:
                             finder.allPaths();
                             break;
+                        case eCalculation::mincut:
+                            finder.KargerDo();
+                            break;
                          default:
                              throw std::runtime_error(
                                  "UNrecognized file format");

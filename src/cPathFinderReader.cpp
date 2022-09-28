@@ -172,6 +172,11 @@ namespace raven
                 polygon();
                 return eCalculation::costs;
             }
+            else if (line.find("mincut") != -1)
+            {
+                links(false);
+                return eCalculation::mincut;
+            }
 
             return myFormat;
         }
@@ -483,15 +488,18 @@ namespace raven
             return valveTimes;
         }
 
-        void cPathFinderReader::links()
+        void cPathFinderReader::links(bool fdirected)
         {
             myFinder.clear();
-            myFinder.directed();
+            if( fdirected)
+                myFinder.directed();
             myFinder.makeNodes(403394);
             std::string line;
             while (std::getline(myFile, line))
             {
                 // std::cout << line << " | ";
+                if( line.empty())
+                    continue;
                 auto token = ParseSpaceDelimited(line);
                 myFinder.addLinkFast(
                     atoi(token[0].c_str()),
