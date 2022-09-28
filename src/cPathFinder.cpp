@@ -431,12 +431,6 @@ namespace raven
             myPath.resize(nodeCount(), 0);
             myPred.clear();
 
-            //depthRecurse(v, visitor);
-            depthFirstOwnStack(v, visitor);
-        }
-
-        void cPathFinder::depthFirstOwnStack(int v, std::function<void(int v)> visitor)
-        {
             std::stack<int> stack;
             stack.push(v);
 
