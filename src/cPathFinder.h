@@ -24,6 +24,7 @@ namespace raven
             islands,
             flows,
             multiflows,
+            alloc,
             maze_ascii_art,
             cliques,
             reqs,
@@ -183,6 +184,8 @@ namespace raven
             void multiflows();
             void equiflows();
 
+            void alloc();
+
             void waterValves(
                 const std::vector<int> &valveTimes,
                 bool pulse);
@@ -253,7 +256,7 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
             Karger(
                 int &bestcutsize,
                 int &bestbalance,
-                int trialcount );
+                int trialcount);
             void KargerDo();
 
             /////////////////////// get text output ///////////////////////////////////////////
@@ -309,6 +312,10 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
              */
             void depthFirst(int v, std::function<void(int v)> visitor);
 
+            int countCloseNodes(
+                int v,
+                int maxdepth);
+
             /** Create a name for a grid node
              * @param[in] 0-based row position
              * @param[in] 0-based col position
@@ -337,7 +344,6 @@ We need to answer the queries of type : A, B, which asks time required when 2 ob
             std::string myResults;
 
             void depthRecurse(int v, std::function<void(int v)> visitor);
-
 
             /** Breadth First Search
              * @param[in] visitor function to call on each new node visited

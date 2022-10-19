@@ -83,6 +83,12 @@ namespace raven
                 myFinder.flows();
                 return eCalculation::flows;
             }
+            else if (line.find("alloc") != -1)
+            {
+                costs(false,true);
+                //myFinder.alloc();
+                return eCalculation::alloc;
+            }
             else if (line.find("hills") != -1)
             {
                 myFinder.hills(orthogonalGrid());

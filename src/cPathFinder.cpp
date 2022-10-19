@@ -438,16 +438,75 @@ namespace raven
             {
                 int v = stack.top();
                 stack.pop();
-                
+
                 if (!myPath[v])
                 {
                     visitor(v);
                     myPath[v] = 1;
                 }
                 for (int w : adjacent(v))
+                {
+
                     if (!myPath[w])
                         stack.push(w);
+                }
+                std::cout << "\n";
             }
+        }
+
+        int cPathFinder::countCloseNodes(
+            int v,        // start node
+            int maxdepth) // maximimum distance from start
+        {
+            // init record of visited nodes
+            std::vector<int> visited(nodeCount());
+
+            // init record of distance from start node
+            std::vector<int> dist(nodeCount());
+
+            // construct stack for nodes ready to be visited
+            std::stack<int> stack;
+
+            // add start node to stack
+            stack.push(v);
+
+            // while nodes waiting to be visited
+            while (!stack.empty())
+            {
+                // pull next node from stack
+                int v = stack.top();
+                stack.pop();
+
+                // mark node visited
+                visited[v] = 1;
+
+                // check if we need to go deeper
+                if (dist[v] < maxdepth)
+                {
+                    // iterate over adjacent nodes
+                    for (int w : adjacent(v))
+                    {
+                        // check adjacent not visited
+                        if (!visited[w])
+                        {
+                            // store distance from start node
+                            dist[w] = dist[v] + 1;
+
+                            // add to stack of nodes to be visited
+                            stack.push(w);
+                        }
+                    }
+                }
+            }
+
+            // count nodes within maxdepth of start nodes
+            int countClose = 0;
+            for (int d : dist)
+            {
+                if (d > 0 && d <= maxdepth)
+                    countClose++;
+            }
+            return countClose;
         }
 
         void cPathFinder::depthRecurse(
@@ -708,6 +767,43 @@ namespace raven
             std::cout << myResults;
         }
 
+        void cPathFinder::alloc()
+        {
+            // identify unique agents and tasks
+            std::set< int > setAgent, setTask;
+            for (auto &l : links())
+            {
+                setAgent.insert( source(l) );
+                setTask.insert(target(l));
+            }
+
+            // add link from start to each agent, capacity 1
+            myStart = findoradd("start_alloc");
+            for( int agent : setAgent )
+                addLinkFast(myStart,agent );
+
+            // add link from each task to end, capacity 1
+            myEnd = findoradd("end_alloc");  
+            for( int task : setTask )
+                addLinkFast(task,myEnd );
+
+            // assign agents to tasks by calculating the maximum flow
+            flows();
+
+            std::stringstream ss;
+            for (auto &l : links())
+            {
+                if( source(l) == myStart )
+                    continue;
+                if( target(l) == myEnd )
+                    continue;
+                if( l.second.myValue > 0 )
+                    ss << "Agent " << userName( source(l) )
+                        << " assigned to task " << userName( target(l) ) << "\r\n";
+            }
+            myResults = ss.str();
+
+        }
         void cPathFinder::flows()
         {
             /*
@@ -749,7 +845,7 @@ namespace raven
                     u = v;
                 }
 
-                // consume capacity
+                // consume capacity of links in path
                 u = -1;
                 for (int v : myPath)
                 {
@@ -757,9 +853,12 @@ namespace raven
                     {
                         auto &l = findLink(u, v);
                         l.myCost -= maxflow;
+
+                        // remove link if no capacity left
                         if (l.myCost < 0.01)
                             removeLink(u, v);
 
+                        // update flow through link in backup graph
                         bkup.link(u, v).myValue += maxflow;
                         if (!isDirected())
                             bkup.link(v, u).myValue += maxflow;

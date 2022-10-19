@@ -12,6 +12,23 @@ raven::graph::cPathFinderReader reader(finder);
 
 void KargerTest();
 
+void CountCloseTest()
+{
+    std::cout << "CountCloseTest\n";
+    finder.clear();
+    finder.addLink("0", "2");
+    finder.addLink("0", "1");
+    finder.addLink("1", "12");
+    finder.addLink("12", "13");
+    finder.addLink("13", "14"); 
+
+    int count = finder.countCloseNodes(
+        finder.find("0"),
+        2);
+
+    std::cout << "count by 2 is " << count << "\n";
+}
+
 void DFStest()
 {
     std::cout << "DFS test\n";
@@ -22,8 +39,8 @@ void DFStest()
     finder.addLink("0", "2");
     finder.addLink("0", "1");
     finder.addLink("1", "12");
-    finder.addLink("1", "13");
-    finder.addLink("1", "14");
+    finder.addLink("12", "13");
+    finder.addLink("13", "14");
     finder.depthFirst(
         finder.find("0"),
         [&](int v)
@@ -67,6 +84,10 @@ main()
     // KargerTest();
 
     DFStest();
+
+    CountCloseTest();
+
+    exit(0);
 
     DFSAmazon();
 

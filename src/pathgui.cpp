@@ -52,7 +52,6 @@ void RunDOT(raven::graph::cPathFinder &finder)
     using raven::graph::eCalculation;
     switch (opt)
     {
-    case eCalculation::costs:
     case eCalculation::sales:
     case eCalculation::bonesi:
     case eCalculation::srcnuzn:
@@ -85,7 +84,7 @@ void RunDOT(raven::graph::cPathFinder &finder)
     auto sample = path / "sample.png";
     std::string scmd = "dot -Kfdp -n -Tpng -Tdot -o " + sample.string() + " " + gdot.string();
 
-    //std::cout << scmd << "\n";
+    // std::cout << scmd << "\n";
 
     // Retain keyboard focus, minimize module2 window
     si.wShowWindow = SW_SHOWNOACTIVATE | SW_MINIMIZE;
@@ -140,7 +139,7 @@ void RunDOT(raven::graph::cPathFinder &finder)
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
-    Sleep(1000);
+    Sleep(2000);
 }
 
 void doPreReqs(
@@ -244,7 +243,8 @@ int main()
                      auto s = editPanel.text();
                      replaceAll(s, "\r\n", "\n");
                      f << s; });
-    mfile.append("Calculate", [&](const std::string &title)
+    mfile.append("Calculate",
+                 [&](const std::string &title)
                  {
                      raven::set::cRunWatch::Start();
                      using raven::graph::cPathFinderReader;
@@ -274,17 +274,17 @@ int main()
                          case eCalculation::flows:
                          case eCalculation::multiflows:
                          case eCalculation::bonesi:
-                            opt = eCalculation::costs;
+                             opt = eCalculation::costs;
                              break;
-                        case eCalculation::paths:
-                            finder.allPaths();
-                            break;
-                        case eCalculation::reqs:
-                            opt = eCalculation::reqs;
-                            break;
-                        case eCalculation::cliques:
-                            finder.cliques();
-                            opt = eCalculation::costs;
+                         case eCalculation::paths:
+                             finder.allPaths();
+                             break;
+                         case eCalculation::reqs:
+                             opt = eCalculation::reqs;
+                             break;
+                         case eCalculation::cliques:
+                             finder.cliques();
+                             opt = eCalculation::costs;
                              break;
                          case eCalculation::sales:
                              opt = eCalculation::sales;
@@ -300,19 +300,23 @@ int main()
                              break;
                          case eCalculation::maze_ascii_art:
                              break;
-                        case eCalculation::srcnuzn:
-                            finder.srcnuzn();
-                            opt = eCalculation::costs;
-                            break;
-                        case eCalculation::pickup:
-                            finder.pickup();
-                            opt = eCalculation::pickup;
-                            break;
-                        case eCalculation::allpaths:
-                            finder.allPaths();
-                            break;
-                        case eCalculation::mincut:
-                            finder.KargerDo();
+                         case eCalculation::srcnuzn:
+                             finder.srcnuzn();
+                             opt = eCalculation::costs;
+                             break;
+                         case eCalculation::pickup:
+                             finder.pickup();
+                             opt = eCalculation::pickup;
+                             break;
+                         case eCalculation::allpaths:
+                             finder.allPaths();
+                             break;
+                         case eCalculation::mincut:
+                             finder.KargerDo();
+                             break;
+                        case eCalculation::alloc:
+                            finder.alloc();
+                            opt = eCalculation::alloc;
                             break;
                          default:
                              throw std::runtime_error(
@@ -331,7 +335,9 @@ int main()
                      form.text("Path Finder GUI " + fname);
 
                      form.update();
-                     raven::set::cRunWatch::Report(); });
+                     raven::set::cRunWatch::Report();
+                 });
+
     mbar.append("File", mfile);
 
     form.events().draw(
@@ -360,6 +366,7 @@ int main()
                 break;
             case eCalculation::reqs:
             case eCalculation::pickup:
+            case eCalculation::alloc:
                 s.text(
                     finder.resultsText(),
                     {5, 5});

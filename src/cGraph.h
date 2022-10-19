@@ -16,6 +16,9 @@ namespace raven
         class cLink
         {
         public:
+            /// @brief  CTOR 
+            /// @param c link cost, default 1
+            
             cLink(double c = 1)
                 : myCost(c)
             {
@@ -140,6 +143,14 @@ namespace raven
                     it->second.myLink.insert(std::make_pair(u, cLink(cost)));
                 }
             }
+            /** Add link with no error checking
+             * @param[in] u source
+             * @param[in] v destination
+             * 
+             * The nodes, u and v, must already exist
+             * 
+             * The link will have a cost of 1
+             */
             void addLinkFast(int u, int v)
             {
                 myG.find(u)->second.myLink.insert(std::make_pair(v, cLink()));
