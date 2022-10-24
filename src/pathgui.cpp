@@ -8,18 +8,6 @@
 #include "cPathFinder.h"
 #include "cPathFinderReader.h"
 
-// enum class eOption
-// {
-//     none,
-//     costs,
-//     req,
-//     sales,
-//     span,
-//     cams,
-//     ortho,
-//     islands,
-// };
-
 raven::graph::eCalculation opt = raven::graph::eCalculation::none;
 
 void replaceAll(std::string &str, const std::string &from, const std::string &to)

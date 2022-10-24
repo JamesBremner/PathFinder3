@@ -16,6 +16,7 @@ namespace raven
         cPathFinderReader::open(
             const std::string &fname)
         {
+            myFinder.clear();
             myFormat = eCalculation::none;
             myFile.close();
             myFile.open(fname);

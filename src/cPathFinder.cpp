@@ -17,6 +17,7 @@ namespace raven
             cGraph::clear();
             myPath.clear();
             mySource.clear();
+            myDist.clear();
             myPathCost = 0;
         }
 
@@ -791,6 +792,7 @@ namespace raven
             flows();
 
             std::stringstream ss;
+            ss << "Agent\tTask\n";
             for (auto &l : links())
             {
                 if( source(l) == myStart )
@@ -798,8 +800,8 @@ namespace raven
                 if( target(l) == myEnd )
                     continue;
                 if( l.second.myValue > 0 )
-                    ss << "Agent " << userName( source(l) )
-                        << " assigned to task " << userName( target(l) ) << "\r\n";
+                    ss << userName( source(l) ) << "\t"
+                       << userName( target(l) ) << "\n";
             }
             myResults = ss.str();
 
@@ -874,7 +876,7 @@ namespace raven
 
             myPathCost = totalFlow;
             myResults = "total flow " + std::to_string(totalFlow);
-            std::cout << myResults << "\n";
+            //std::cout << myResults << "\n";
 
             std::stringstream ss;
             for (auto &n : nodes())
@@ -890,7 +892,7 @@ namespace raven
                        << l.second.myValue << "\n";
                 }
             }
-            std::cout << ss.str();
+            //std::cout << ss.str();
         }
 
         void cPathFinder::multiflows()

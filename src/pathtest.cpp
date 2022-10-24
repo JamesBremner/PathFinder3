@@ -87,18 +87,20 @@ main()
 
     CountCloseTest();
 
-    exit(0);
+    //DFSAmazon();
 
-    DFSAmazon();
+    reader.open("../dat/chores.txt");
+    finder.alloc();
+    auto sr = finder.resultsText();
+    if( sr.find("child1\tchore2") == -1 ||
+        sr.find("child2\tchore3") == -1 )
+        throw std::runtime_error("chores.txt failed");
 
-    exit(0);
 
     reader.open("../dat/karup.txt");
     expected = "by -> bz -> bx -> ";
     if (expected != finder.pathText())
         throw std::runtime_error("karup.txt failed");
-
-    //         exit(0);
 
     //     // std::cout << "karup timing test\n";
     //     //  reader.open("../dat/karupTimer.txt");
@@ -161,27 +163,27 @@ main()
     //     if (expected != finder.resultsText())
     //         throw std::runtime_error("cliques.txt failed");
 
-    //     reader.open("../dat/flows2.txt");
-    //     expected = "total flow 500";
-    //     if (expected != finder.resultsText())
-    //         throw std::runtime_error("flows2.txt failed");
+        reader.open("../dat/flows2.txt");
+        expected = "total flow 500";
+        if (expected != finder.resultsText())
+            throw std::runtime_error("flows2.txt failed");
 
-    //     // flow in directed graph
-    //     reader.open("../dat/flows3.txt");
-    //     expected = "total flow 500";
-    //     if (expected != finder.resultsText())
-    //         throw std::runtime_error("flows3.txt failed");
+        // flow in directed graph
+        reader.open("../dat/flows3.txt");
+        expected = "total flow 500";
+        if (expected != finder.resultsText())
+            throw std::runtime_error("flows3.txt failed");
 
-    //     reader.open("../dat/flows7.txt");
-    //     expected = "total flow 9";
-    //     if (finder.resultsText().find(expected) == -1)
-    //         throw std::runtime_error("flows7.txt failed");
+        reader.open("../dat/flows7.txt");
+        expected = "total flow 9";
+        if (finder.resultsText().find(expected) == -1)
+            throw std::runtime_error("flows7.txt failed");
 
-    //     // equal flows https://stackoverflow.com/questions/67908818
-    //     reader.open("../dat/flows8.txt");
-    //     expected = "total flow 8";
-    //     if (finder.resultsText().find(expected) == -1)
-    //         throw std::runtime_error("flows8.txt failed");
+        // equal flows https://stackoverflow.com/questions/67908818
+        reader.open("../dat/flows8.txt");
+        expected = "total flow 8";
+        if (finder.resultsText().find(expected) == -1)
+            throw std::runtime_error("flows8.txt failed");
 
     //     reader.open("../dat/hill.txt");
     //     expected = "c1r1 -> c1r2 -> c1r3 -> c2r3 -> c3r3 ->  Cost is 4\n";
