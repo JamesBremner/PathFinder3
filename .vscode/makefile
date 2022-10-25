@@ -28,13 +28,13 @@ CCflags = -std=c++17 $(OPT) -D_mingw_
 OBJ_pathtest = \
 	$(ODIR)/pathtest.o \
 	 $(ODIR)/cPathFinder.o $(ODIR)/cPathFinderReader.o $(ODIR)/cGraph.o \
-	 $(ODIR)/cMaze.o $(ODIR)/Karger.o \
+	 $(ODIR)/cMaze.o $(ODIR)/Karger.o $(ODIR)/EdmondsKarp.o \
 	 $(ODIR)/cRunWatch.o
 
 OBJ_pathgui = \
 	$(ODIR)/pathgui.o \
 	 $(ODIR)/cPathFinder.o $(ODIR)/cPathFinderReader.o $(ODIR)/cGraph.o \
-	 $(ODIR)/cMaze.o $(ODIR)/Karger.o \
+	 $(ODIR)/cMaze.o $(ODIR)/Karger.o $(ODIR)/EdmondsKarp.o \
 	 $(ODIR)/cRunWatch.o
 
 ### COMPILE

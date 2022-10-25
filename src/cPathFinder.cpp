@@ -854,7 +854,7 @@ namespace raven
                 addLinkFast(task, myEnd);
 
             // assign agents to tasks by calculating the maximum flow
-            flows();
+            EdmondsKarp();
 
             std::stringstream ss;
             ss << "Agent\tTask\n";

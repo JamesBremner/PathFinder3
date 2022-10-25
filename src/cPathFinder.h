@@ -185,6 +185,7 @@ namespace raven
             void flows();
             void multiflows();
             void equiflows();
+            void EdmondsKarp();
 
             void alloc();
 

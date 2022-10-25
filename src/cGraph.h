@@ -21,6 +21,7 @@ namespace raven
             
             cLink(double c = 1)
                 : myCost(c)
+                , myValue(0)
             {
             }
             double myCost; // a constraint e.g. distance of a road, max xapacity of a pipe
@@ -215,7 +216,12 @@ namespace raven
 
             cLink &findLink(int u, int v)
             {
-                return myG.at(u).myLink.find(v)->second;
+                auto& l = myG.at(u).myLink;
+                auto it = l.find(v);
+                if( it == l.end() )
+                    throw std::runtime_error(
+                        "cGraph::findLink no such link"     );
+                return it->second;
             }
 
             void removeLink(int u, int v)
