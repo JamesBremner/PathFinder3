@@ -14,49 +14,54 @@ namespace raven
                 : myFinder(finder)
             {
             }
-            void set(const std::string &fname)
-            {
-                myfname = fname;
-            }
 
             /** Open file, determine format and read data into pathfinder
-     * @param[in] fname to open
-     * @return format
-     */
+             * @param[in] fname to open
+             * @return format
+             */
             eCalculation open(
                 const std::string &fname);
 
-            /** Read input file with costed links 
-     * 
-     *  @param[in] weights true if required, false if not, default true
-     *  @param[in] directed true to create directed graph, default false
-     * 
-     *  format: https://github.com/JamesBremner/PathFinder/wiki/Costs 
-     * 
-     * If weights is false, then input lines may have just three columns,
-     * and cost of 1 will be assigned to link
-     */
+            void filename(const std::string &fname)
+            {
+                myfname = fname;
+            }
+            std::string filename() const
+            {
+                return myfname;
+            }
+
+            /** Read input file with costed links
+             *
+             *  @param[in] weights true if required, false if not, default true
+             *  @param[in] directed true to create directed graph, default false
+             *
+             *  format: https://github.com/JamesBremner/PathFinder/wiki/Costs
+             *
+             * If weights is false, then input lines may have just three columns,
+             * and cost of 1 will be assigned to link
+             */
             void costs(
                 bool weights = true,
                 bool directed = false);
 
             void nodecosts(
-                bool directed = false );
+                bool directed = false);
 
             /** Read input file specifying pipes and valves
-         */
+             */
             std::vector<int> valves(
                 bool &pulse);
 
             /** read input file with uncosted links
-     * 
-     * This expects nothing but links in src dst format
-     * 
-     * It assumes that the graph nodes have already been created
-     * 
-     * There is no error checking - intended for fast reading very large graphs
-     */
-            void links(bool fdirected = true );
+             *
+             * This expects nothing but links in src dst format
+             *
+             * It assumes that the graph nodes have already been created
+             *
+             * There is no error checking - intended for fast reading very large graphs
+             */
+            void links(bool fdirected = true);
 
             void bonesi();
 
@@ -65,7 +70,7 @@ namespace raven
 
             /** read cities with locations or links
              * @return vector of node indices to be visited
-             * 
+             *
              * If return vector is empty, all cities must be visted
              */
             std::vector<int> sales();
@@ -100,14 +105,11 @@ namespace raven
             eCalculation myFormat;
 
             /** Parse Space Delimited line
- * @param[in] l line from a space delimited text file
- * @return vector of strings containing the columns extracted from line
- */
+             * @param[in] l line from a space delimited text file
+             * @return vector of strings containing the columns extracted from line
+             */
             std::vector<std::string> ParseSpaceDelimited(
                 const std::string &l);
-
-
-    };
+        };
+    }
 }
-}
-

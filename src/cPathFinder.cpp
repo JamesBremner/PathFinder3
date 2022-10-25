@@ -224,6 +224,71 @@ namespace raven
             mySource.push_back(s);
         }
 
+        eCalculation cPathFinder::calculate(eCalculation calc)
+        {
+            eCalculation displayType = eCalculation::none;
+            switch (calc)
+            {
+            case eCalculation::none:
+                return calc;
+
+            case eCalculation::costs:
+            case eCalculation::hills:
+            case eCalculation::gsingh:
+            case eCalculation::shaun:
+            case eCalculation::flows:
+            case eCalculation::multiflows:
+            case eCalculation::bonesi:
+                return eCalculation::costs;
+            case eCalculation::paths:
+                allPaths();
+                break;
+            case eCalculation::reqs:
+                displayType = eCalculation::reqs;
+                break;
+            case eCalculation::cliques:
+                cliques();
+                displayType = eCalculation::costs;
+                break;
+            case eCalculation::sales:
+                displayType = eCalculation::sales;
+                break;
+            case eCalculation::spans:
+                displayType = eCalculation::spans;
+                break;
+            case eCalculation::cams:
+                displayType = eCalculation::cams;
+                break;
+            case eCalculation::islands:
+                displayType = eCalculation::islands;
+                break;
+            case eCalculation::maze_ascii_art:
+                break;
+            case eCalculation::srcnuzn:
+                srcnuzn();
+                displayType = eCalculation::costs;
+                break;
+            case eCalculation::pickup:
+                pickup();
+                displayType = eCalculation::pickup;
+                break;
+            case eCalculation::allpaths:
+                allPaths();
+                break;
+            case eCalculation::mincut:
+                KargerDo();
+                break;
+            case eCalculation::alloc:
+                alloc();
+                displayType = eCalculation::alloc;
+                break;
+            default:
+                throw std::runtime_error(
+                    "UNrecognized file format");
+            }
+            return displayType;
+        }
+
         void cPathFinder::path()
         {
             paths(myStart);
@@ -771,22 +836,22 @@ namespace raven
         void cPathFinder::alloc()
         {
             // identify unique agents and tasks
-            std::set< int > setAgent, setTask;
+            std::set<int> setAgent, setTask;
             for (auto &l : links())
             {
-                setAgent.insert( source(l) );
+                setAgent.insert(source(l));
                 setTask.insert(target(l));
             }
 
             // add link from start to each agent, capacity 1
             myStart = findoradd("start_alloc");
-            for( int agent : setAgent )
-                addLinkFast(myStart,agent );
+            for (int agent : setAgent)
+                addLinkFast(myStart, agent);
 
             // add link from each task to end, capacity 1
-            myEnd = findoradd("end_alloc");  
-            for( int task : setTask )
-                addLinkFast(task,myEnd );
+            myEnd = findoradd("end_alloc");
+            for (int task : setTask)
+                addLinkFast(task, myEnd);
 
             // assign agents to tasks by calculating the maximum flow
             flows();
@@ -795,16 +860,15 @@ namespace raven
             ss << "Agent\tTask\n";
             for (auto &l : links())
             {
-                if( source(l) == myStart )
+                if (source(l) == myStart)
                     continue;
-                if( target(l) == myEnd )
+                if (target(l) == myEnd)
                     continue;
-                if( l.second.myValue > 0 )
-                    ss << userName( source(l) ) << "\t"
-                       << userName( target(l) ) << "\n";
+                if (l.second.myValue > 0)
+                    ss << userName(source(l)) << "\t"
+                       << userName(target(l)) << "\n";
             }
             myResults = ss.str();
-
         }
         void cPathFinder::flows()
         {
@@ -876,7 +940,7 @@ namespace raven
 
             myPathCost = totalFlow;
             myResults = "total flow " + std::to_string(totalFlow);
-            //std::cout << myResults << "\n";
+            // std::cout << myResults << "\n";
 
             std::stringstream ss;
             for (auto &n : nodes())
@@ -892,7 +956,7 @@ namespace raven
                        << l.second.myValue << "\n";
                 }
             }
-            //std::cout << ss.str();
+            // std::cout << ss.str();
         }
 
         void cPathFinder::multiflows()

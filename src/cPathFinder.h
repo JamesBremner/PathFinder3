@@ -111,6 +111,8 @@ namespace raven
 
             ///////////////////////// methods applying algorithms //////////////////////
 
+            eCalculation calculate( eCalculation calc );
+
             /** @brief Find optimum path from start to end node
              *
              * The path from attributes myStart to myEnd

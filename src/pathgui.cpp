@@ -235,81 +235,14 @@ int main()
                  [&](const std::string &title)
                  {
                      raven::set::cRunWatch::Start();
-                     using raven::graph::cPathFinderReader;
-                     finder.clear();
                      wex::filebox fb(form);
-                     auto fname = fb.open();
-                     if (fname.empty())
-                         return;
-                     cPathFinderReader reader(finder);
+                     raven::graph::cPathFinderReader reader(finder);
 
                      try
                      {
-                         using raven::graph::eCalculation;
-                         switch (reader.open(fname))
-                         {
-                         case eCalculation::none:
-                             throw std::runtime_error(
-                                 "File format not specified");
-                         case eCalculation::not_open:
-                             throw std::runtime_error(
-                                 "Cannot open " + fname);
-
-                         case eCalculation::costs:
-                         case eCalculation::hills:
-                         case eCalculation::gsingh:
-                         case eCalculation::shaun:
-                         case eCalculation::flows:
-                         case eCalculation::multiflows:
-                         case eCalculation::bonesi:
-                             opt = eCalculation::costs;
-                             break;
-                         case eCalculation::paths:
-                             finder.allPaths();
-                             break;
-                         case eCalculation::reqs:
-                             opt = eCalculation::reqs;
-                             break;
-                         case eCalculation::cliques:
-                             finder.cliques();
-                             opt = eCalculation::costs;
-                             break;
-                         case eCalculation::sales:
-                             opt = eCalculation::sales;
-                             break;
-                         case eCalculation::spans:
-                             opt = eCalculation::spans;
-                             break;
-                         case eCalculation::cams:
-                             opt = eCalculation::cams;
-                             break;
-                         case eCalculation::islands:
-                             opt = eCalculation::islands;
-                             break;
-                         case eCalculation::maze_ascii_art:
-                             break;
-                         case eCalculation::srcnuzn:
-                             finder.srcnuzn();
-                             opt = eCalculation::costs;
-                             break;
-                         case eCalculation::pickup:
-                             finder.pickup();
-                             opt = eCalculation::pickup;
-                             break;
-                         case eCalculation::allpaths:
-                             finder.allPaths();
-                             break;
-                         case eCalculation::mincut:
-                             finder.KargerDo();
-                             break;
-                        case eCalculation::alloc:
-                            finder.alloc();
-                            opt = eCalculation::alloc;
-                            break;
-                         default:
-                             throw std::runtime_error(
-                                 "UNrecognized file format");
-                         }
+                        opt = finder.calculate(
+                            reader.open(
+                                fb.open() ));
                      }
                      catch (std::runtime_error &e)
                      {
@@ -320,7 +253,7 @@ int main()
                      RunDOT(finder);
                      editPanel.show(false);
                      graphPanel.update();
-                     form.text("Path Finder GUI " + fname);
+                     form.text("Path Finder GUI " + reader.filename());
 
                      form.update();
                      raven::set::cRunWatch::Report();

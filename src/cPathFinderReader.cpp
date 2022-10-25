@@ -18,10 +18,14 @@ namespace raven
         {
             myFinder.clear();
             myFormat = eCalculation::none;
+            myfname = fname;
+            if (fname.empty())
+                return eCalculation::none;
             myFile.close();
             myFile.open(fname);
             if (!myFile.is_open())
-                return eCalculation::not_open;
+                throw std::runtime_error(
+                    "Cannot open " + fname);
             std::string line;
             getline(myFile, line);
             if (line.find("format") != 0)
@@ -86,8 +90,8 @@ namespace raven
             }
             else if (line.find("alloc") != -1)
             {
-                costs(false,true);
-                //myFinder.alloc();
+                costs(false, true);
+                // myFinder.alloc();
                 return eCalculation::alloc;
             }
             else if (line.find("hills") != -1)
@@ -350,21 +354,23 @@ namespace raven
             std::string line;
             while (std::getline(myFile, line))
             {
-                std::istringstream ss( line );
+                std::istringstream ss(line);
                 std::string token;
                 ss >> token;
-                if( token == "v") {
+                if (token == "v")
+                {
                     ss >> token;
-                    auto& n = myFinder.findNode( myFinder.findoradd( token ) );
+                    auto &n = myFinder.findNode(myFinder.findoradd(token));
                     ss >> token;
                     std::string color = token;
                     ss >> token;
                     n.myColor = color + " " + token;
                 }
-                else if( token == "e") {
+                else if (token == "e")
+                {
                     std::string v1, v2;
                     ss >> v1 >> v2;
-                    myFinder.addLink( v1, v2 );
+                    myFinder.addLink(v1, v2);
                 }
             }
         }
@@ -498,14 +504,14 @@ namespace raven
         void cPathFinderReader::links(bool fdirected)
         {
             myFinder.clear();
-            if( fdirected)
+            if (fdirected)
                 myFinder.directed();
             myFinder.makeNodes(403394);
             std::string line;
             while (std::getline(myFile, line))
             {
                 // std::cout << line << " | ";
-                if( line.empty())
+                if (line.empty())
                     continue;
                 auto token = ParseSpaceDelimited(line);
                 myFinder.addLinkFast(
