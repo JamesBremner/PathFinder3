@@ -21,7 +21,7 @@ namespace raven
             myPathCost = 0;
         }
 
-        bool cPathFinder::isLinkOnPath(const link_t &e) const
+        bool cPathFinder::isLinkOnPath( link_t &e) 
         {
             auto pathItsrc = std::find(myPath.begin(), myPath.end(), e.first.first);
             auto pathItdst = std::find(myPath.begin(), myPath.end(), e.first.second);
@@ -57,7 +57,7 @@ namespace raven
             std::cout << "pathViz " << pathText() << "\n";
 
             // loop over links
-            for (auto &e : links())
+            for (link_t e : links())
             {
                 if (!isDirected())
 
@@ -114,7 +114,7 @@ namespace raven
             std::cout << "pathViz " << pathText() << "\n";
 
             // loop over links
-            for (auto &e : links())
+            for (link_t e : links())
             {
                 if (!isDirected())
 
@@ -729,8 +729,8 @@ namespace raven
             {
                 // select first remaining uncovered link
                 auto l = *(work.links().begin());
-                int u = source(l);
-                int v = target(l);
+                int u = l.first.first;
+                int v = l.first.second;
 
                 if (u < 0 || v < 0)
                     throw std::runtime_error(
@@ -839,8 +839,8 @@ namespace raven
             std::set<int> setAgent, setTask;
             for (auto &l : links())
             {
-                setAgent.insert(source(l));
-                setTask.insert(target(l));
+                setAgent.insert(l.first.first);
+                setTask.insert(l.first.second);
             }
 
             // add link from start to each agent, capacity 1
@@ -860,13 +860,13 @@ namespace raven
             ss << "Agent\tTask\n";
             for (auto &l : links())
             {
-                if (source(l) == myStart)
+                if (l.first.first == myStart)
                     continue;
-                if (target(l) == myEnd)
+                if (l.first.second == myEnd)
                     continue;
-                if (l.second.myValue > 0)
-                    ss << userName(source(l)) << "\t"
-                       << userName(target(l)) << "\n";
+                if (l.second->myValue > 0)
+                    ss << userName(l.first.first) << "\t"
+                       << userName(l.first.second) << "\n";
             }
             myResults = ss.str();
         }
@@ -1097,7 +1097,7 @@ namespace raven
                     int sumInput = 0;
                     for (auto &inlink : inlinks(v))
                     {
-                        sumInput += inlink.second.myValue;
+                        sumInput += inlink.second->myValue;
                     }
 
                     // node outflows
@@ -1153,7 +1153,7 @@ namespace raven
                 float sh = gheight[srow][scol];
                 float th = gheight[trow][tcol];
                 float delta = th - sh;
-                l.second.myCost = 1 + delta * delta;
+                l.second->myCost = 1 + delta * delta;
             }
 
             path();

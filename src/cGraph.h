@@ -68,8 +68,8 @@ namespace raven
         };
 
         typedef std::map<int, cNode> nodeMap_t;
-        typedef std::pair<std::pair<int, int>, cLink> link_t;
-        typedef std::multimap<std::pair<int, int>, cLink> linkmap_t;
+        typedef std::pair<std::pair<int, int>, cLink*> link_t;
+        typedef std::multimap<std::pair<int, int>, cLink*> linkmap_t;
 
         /// Store the nodes and links of a graph
         class cGraph
@@ -287,14 +287,16 @@ namespace raven
                 return myG;
             }
             /// map of all links, keyed by src, dst pair
-            linkmap_t links() const
+            linkmap_t links()
             {
                 linkmap_t ret;
                 for (auto &n : myG)
                 {
                     for (auto &l : n.second.myLink)
                     {
-                        ret.insert(std::make_pair(std::make_pair(n.first, l.first), l.second));
+                        ret.insert(std::make_pair(
+                            std::make_pair(n.first, l.first),
+                            &( l.second )));
                     }
                 }
                 return ret;
@@ -430,7 +432,7 @@ namespace raven
              * is stored as two directed links,
              * one goung in each direction
              */
-            int linkCount() const
+            int linkCount()
             {
                 if (!myfDirected)
                     return links().size() / 2;
@@ -489,10 +491,10 @@ namespace raven
         };
 
         /// index of link source
-        int source(const link_t &link);
+        int source(link_t &link);
 
         // index of link target
-        int target(const link_t &link);
+        int target(link_t &link);
 
     }
 }
