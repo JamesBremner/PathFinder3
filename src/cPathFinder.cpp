@@ -21,7 +21,7 @@ namespace raven
             myPathCost = 0;
         }
 
-        bool cPathFinder::isLinkOnPath( link_t &e) 
+        bool cPathFinder::isLinkOnPath(link_t &e)
         {
             auto pathItsrc = std::find(myPath.begin(), myPath.end(), e.first.first);
             auto pathItdst = std::find(myPath.begin(), myPath.end(), e.first.second);
@@ -300,8 +300,6 @@ namespace raven
         }
         void cPathFinder::longest()
         {
-            for( auto l : links() )
-                l.second->myCost *= -1;
             longestpaths(myStart);
             pathPick(myEnd);
         }
@@ -310,35 +308,34 @@ namespace raven
             int V = nodeCount();
 
             myDist.clear();
-            myDist.resize(V);
+            myDist.resize(V, 0);
             myPred.clear();
             myPred.resize(V, -1);
 
-            bool sptSet[V]; // sptSet[i] will be true if vertex i is included in shortest
-            // path tree or shortest distance from src to i is finalized
-
-            // Initialize all distances as INFINITE and stpSet[] as false
-            for (int i = 0; i < V; i++)
-                myDist[i] = INT_MAX, sptSet[i] = false;
+            std::vector<bool> sptSet(V,false); // sptSet[i] will be true if vertex i has been processed
 
             // Distance of source vertex from itself is always 0
             myDist[start] = 0;
             myPred[start] = 0;
 
             // Find shortest path for all vertices
+            int u = myStart;
             for (int count = 0; count < V - 1; count++)
             {
-                // Pick the minimum distance vertex from the set of vertices not
-                // yet processed. u is always equal to src in the first iteration.
-                int min = INT_MAX, u;
-
-                for (int v = 0; v < V; v++)
-                    if (sptSet[v] == false && myDist[v] <= min)
-                        min = myDist[v], u = v;
-                if (min == INT_MAX)
+                if (count)
                 {
-                    // no more nodes connected to start
-                    break;
+                    // Pick the minimum distance vertex from the set of vertices not
+                    // yet processed. u is always equal to src in the first iteration.
+                    int min = 0;
+
+                    for (int v = 0; v < V; v++)
+                        if (sptSet[v] == false && myDist[v] > min)
+                            min = myDist[v], u = v;
+                    if (min == 0)
+                    {
+                        // no more nodes connected to start
+                        break;
+                    }
                 }
 
                 // Mark the picked vertex as processed
@@ -350,7 +347,7 @@ namespace raven
                     // Update dist[v] only if total weight of path from src to  v through u is
                     // smaller than current value of dist[v]
                     double linkcost = cost(u, v);
-                    if (myDist[u] + linkcost < myDist[v])
+                    if (myDist[u] + linkcost > myDist[v])
                     {
                         myDist[v] = myDist[u] + linkcost;
                         myPred[v] = u;
@@ -448,14 +445,15 @@ namespace raven
             // reverse so path goes from start to goal
             std::reverse(myPath.begin(), myPath.end());
 
-            // calculate path cost                    
+            // calculate path cost
             myPathCost = 0;
             bool first = true;
-            for (auto p : myPath) {
-                if( first )
+            for (auto p : myPath)
+            {
+                if (first)
                     first = false;
                 else
-                    myPathCost += cost( myPred[p], p );
+                    myPathCost += cost(myPred[p], p);
             }
             std::cout << " cost " << myPathCost << "\n";
 
@@ -465,20 +463,27 @@ namespace raven
         std::string cPathFinder::pathText()
         {
             std::stringstream ss;
+            bool first = true;
             for (auto n : myPath)
             {
                 std::string sn;
+
+                if( first )
+                    first = false;
+                else
+                    ss << " -> ";
+
                 sn = userName(n);
 
                 if (sn == "???")
                     sn = std::to_string(n);
-                ss << sn << " -> ";
+                ss << sn ;
             }
 
             if (myPath.size() && myDist.size() && myPathCost >= 0)
             {
                 ss << " Cost is "
-                   << myPathCost + myMaxNegCost * (myPath.size() - 1)
+                   << myPathCost /*+ myMaxNegCost * (myPath.size() - 1)*/
                    << "\n";
             }
 

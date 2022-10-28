@@ -159,7 +159,7 @@ namespace raven
              * The absolute value of cost will be added to every cost
              * cost will be saved to to attribute myMaxNegCost
              */
-            void makeCostsPositive(int cost);
+           // void makeCostsPositive(int cost);
 
             /// Find minimum edge set that connects all nodes together
             void span();
