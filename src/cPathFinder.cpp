@@ -324,14 +324,14 @@ namespace raven
             {
                 if (count)
                 {
-                    // Pick the minimum distance vertex from the set of vertices not
+                    // Pick the maximum distance vertex from the set of vertices not
                     // yet processed. u is always equal to src in the first iteration.
-                    int min = 0;
+                    int max = 0;
 
                     for (int v = 0; v < V; v++)
-                        if (sptSet[v] == false && myDist[v] > min)
-                            min = myDist[v], u = v;
-                    if (min == 0)
+                        if (sptSet[v] == false && myDist[v] > max)
+                            max = myDist[v], u = v;
+                    if (max == 0)
                     {
                         // no more nodes connected to start
                         break;
@@ -345,7 +345,7 @@ namespace raven
                 for (int v : adjacent(u))
                 {
                     // Update dist[v] only if total weight of path from src to  v through u is
-                    // smaller than current value of dist[v]
+                    // greater than current value of dist[v]
                     double linkcost = cost(u, v);
                     if (myDist[u] + linkcost > myDist[v])
                     {
@@ -456,6 +456,8 @@ namespace raven
                     myPathCost += cost(myPred[p], p);
             }
             std::cout << " cost " << myPathCost << "\n";
+
+            myResults = pathText();
 
             return myPath;
         }

@@ -89,6 +89,12 @@ main()
 
     //DFSAmazon();
 
+    expected = "b -> c -> d -> g -> h -> i Cost is 5";
+    reader.open("../dat/longest.txt");
+    finder.longest();
+    if( finder.resultsText().find(expected) == -1 )
+        throw std::runtime_error("longest.txt failed");
+
     reader.open("../dat/chores.txt");
     finder.alloc();
     auto sr = finder.resultsText();
@@ -97,10 +103,10 @@ main()
         throw std::runtime_error("chores.txt failed");
 
 
-    reader.open("../dat/karup.txt");
-    expected = "by -> bz -> bx -> ";
-    if (expected != finder.pathText())
-        throw std::runtime_error("karup.txt failed");
+    // reader.open("../dat/karup.txt");
+    // expected = "by -> bz -> bx -> ";
+    // if (expected != finder.pathText())
+    //     throw std::runtime_error("karup.txt failed");
 
     //     // std::cout << "karup timing test\n";
     //     //  reader.open("../dat/karupTimer.txt");

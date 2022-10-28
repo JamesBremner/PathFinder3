@@ -399,7 +399,7 @@ namespace raven
             {
                 try
                 {
-                    std::cout << "cGraph::cost " << userName(u) << " " << userName(v) << " " << link(u, v).myCost << "\n";
+                    //std::cout << "cGraph::cost " << userName(u) << " " << userName(v) << " " << link(u, v).myCost << "\n";
                     return link(u, v).myCost;
                 }
                 catch (...)
