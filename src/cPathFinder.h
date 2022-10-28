@@ -15,6 +15,7 @@ namespace raven
             none,
             not_open,
             costs,
+            longest,
             spans,
             sales,
             hills,
@@ -120,6 +121,9 @@ namespace raven
              * The path can be listed by call to pathText()
              */
             void path();
+
+            void longest();
+            void longestpaths( int start );
 
             /** Find paths from start to all nodes
              */

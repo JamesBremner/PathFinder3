@@ -240,6 +240,10 @@ namespace raven
             case eCalculation::multiflows:
             case eCalculation::bonesi:
                 return eCalculation::costs;
+            case eCalculation::longest:
+                longest();
+                displayType = eCalculation::costs;
+                break;
             case eCalculation::paths:
                 allPaths();
                 break;
@@ -293,6 +297,66 @@ namespace raven
         {
             paths(myStart);
             pathPick(myEnd);
+        }
+        void cPathFinder::longest()
+        {
+            for( auto l : links() )
+                l.second->myCost *= -1;
+            longestpaths(myStart);
+            pathPick(myEnd);
+        }
+        void cPathFinder::longestpaths(int start)
+        {
+            int V = nodeCount();
+
+            myDist.clear();
+            myDist.resize(V);
+            myPred.clear();
+            myPred.resize(V, -1);
+
+            bool sptSet[V]; // sptSet[i] will be true if vertex i is included in shortest
+            // path tree or shortest distance from src to i is finalized
+
+            // Initialize all distances as INFINITE and stpSet[] as false
+            for (int i = 0; i < V; i++)
+                myDist[i] = INT_MAX, sptSet[i] = false;
+
+            // Distance of source vertex from itself is always 0
+            myDist[start] = 0;
+            myPred[start] = 0;
+
+            // Find shortest path for all vertices
+            for (int count = 0; count < V - 1; count++)
+            {
+                // Pick the minimum distance vertex from the set of vertices not
+                // yet processed. u is always equal to src in the first iteration.
+                int min = INT_MAX, u;
+
+                for (int v = 0; v < V; v++)
+                    if (sptSet[v] == false && myDist[v] <= min)
+                        min = myDist[v], u = v;
+                if (min == INT_MAX)
+                {
+                    // no more nodes connected to start
+                    break;
+                }
+
+                // Mark the picked vertex as processed
+                sptSet[u] = true;
+
+                // Update dist value of the adjacent vertices of the picked vertex.
+                for (int v : adjacent(u))
+                {
+                    // Update dist[v] only if total weight of path from src to  v through u is
+                    // smaller than current value of dist[v]
+                    double linkcost = cost(u, v);
+                    if (myDist[u] + linkcost < myDist[v])
+                    {
+                        myDist[v] = myDist[u] + linkcost;
+                        myPred[v] = u;
+                    }
+                }
+            }
         }
         void cPathFinder::paths(int start)
         {
@@ -384,18 +448,16 @@ namespace raven
             // reverse so path goes from start to goal
             std::reverse(myPath.begin(), myPath.end());
 
-            std::cout << "\npathpick dbg " << myPath.size() << " " << myDist.size()
-                      << " " << myPath.back()
-                      << " cost " << myDist[myPath.back()] << "\n";
-            for (auto d : myDist)
-                std::cout << d << " ";
-            std::cout << "\n";
-            // if (myDist.size() < myPath.back() + 1)
-            myPathCost = myDist[myPath.back()]
-                //    + myMaxNegCost * (myPath.size() - 1)
-                ;
-            // else
-            //     myPathCost = -1;
+            // calculate path cost                    
+            myPathCost = 0;
+            bool first = true;
+            for (auto p : myPath) {
+                if( first )
+                    first = false;
+                else
+                    myPathCost += cost( myPred[p], p );
+            }
+            std::cout << " cost " << myPathCost << "\n";
 
             return myPath;
         }

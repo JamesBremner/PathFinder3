@@ -1,0 +1,6 @@
+format longest
+l a c 1
+l a b 1
+l b c 1
+s a
+e c

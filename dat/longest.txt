@@ -1,0 +1,13 @@
+format longest
+l a c 1
+l b c 1
+l c d 1
+l d e 1
+l d g 1
+l g f 1
+l g h 1
+l h i 1
+l h j 1
+l b g 1
+s b
+e i

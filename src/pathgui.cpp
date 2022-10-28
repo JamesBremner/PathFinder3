@@ -40,6 +40,7 @@ void RunDOT(raven::graph::cPathFinder &finder)
     using raven::graph::eCalculation;
     switch (opt)
     {
+    case eCalculation::costs:
     case eCalculation::sales:
     case eCalculation::bonesi:
     case eCalculation::srcnuzn:
@@ -127,7 +128,7 @@ void RunDOT(raven::graph::cPathFinder &finder)
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
-    Sleep(2000);
+    Sleep(4000);
 }
 
 void doPreReqs(

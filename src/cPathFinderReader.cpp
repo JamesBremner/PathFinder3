@@ -37,6 +37,11 @@ namespace raven
                 std::cout << myFinder.pathText() << "\n";
                 return eCalculation::costs;
             }
+             if (line.find("longest") != -1)
+             {
+                costs(true,true);
+                return eCalculation::longest;
+             }
             else if (line.find("water") != -1)
             {
                 bool pulse;
