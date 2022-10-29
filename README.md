@@ -25,6 +25,7 @@ If the calculation is succesful, a graphical display of the graph with the path 
 Calculation Options are:
 
  - __Costs.__ Input specifies undirected links, link costs, starting and ending nodes, then uses the Dijsktra algorithm to find optimal path. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Costs)
+ - __Longest__ Input specifies directed links, link costs, starting and ending nodes, then uses a modified Dijsktra algorithm to find longest or most expensive path.
  - __Spans__ Input specifies undirected links, with costs then uses Pim's algorithm to find minimum cost links that connect all nodes together. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Spans)
  - __Sales__  Input specifies undirected links, with costs then finds a route that will visit every node once. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Sales)
  - __Cams__ Find a set of nodes that cover every link.  Input specifies undirected links.  [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Cams)
