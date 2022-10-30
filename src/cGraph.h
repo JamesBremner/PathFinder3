@@ -62,7 +62,7 @@ namespace raven
                 return myLink.size();
             }
             std::string myName;
-            int myCost;
+            double myCost;
             std::string myColor;
             nodeOutEdgesMap_t myLink;
         };

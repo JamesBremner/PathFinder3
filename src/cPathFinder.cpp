@@ -306,11 +306,7 @@ namespace raven
         }
         void cPathFinder::probs()
         {
-            /* The probabilities are stored in the link and node attribute myCost
-              The graph class stores these as integers
-              So we need to scale the probs to the range [0 ... 10000]
-            */
-            const double probscale = 10000;
+            // The probabilities are stored in the link and node attribute myCost
 
             // invalidate all node probabilities
             for (auto &n : myG)
@@ -324,7 +320,6 @@ namespace raven
                 int ins = inDegree(n.second);
                 if (outs && (!ins))
                     vSources.push_back(node(n.second));
-                n.second.myCost = probscale;
             }
             // find all paths leading to target node frome every possible source
             std::vector<std::vector<int>> vPath;
@@ -359,9 +354,9 @@ namespace raven
                         // loop over inlinks
                         std::vector<double> vprob;
                         bool fOK = true;
-                        for (const auto l : inlinks(n) )
+                        for (const auto l : inlinks(n))
                         {
-                            int prevNodeProb = node(l.first.first).myCost;
+                            double prevNodeProb = node(l.first.first).myCost;
                             if (prevNodeProb == -1)
                             {
                                 // the previous node probability has not been calculated yet
@@ -372,7 +367,7 @@ namespace raven
                             // store the probability contribution from this inlink
                             // it is the product of the source node proabability and the link probability
                             vprob.push_back(
-                                (prevNodeProb / probscale) * l.second->myCost);
+                                prevNodeProb * l.second->myCost);
                         }
                         // check if there is enough information
                         // to calculate the probability for this node
@@ -383,12 +378,15 @@ namespace raven
                         // calculate this node's probability
                         switch (vprob.size())
                         {
+                        case 0:
+                            node(n).myCost = 1;
+                            break;
                         case 1:
-                            node(n).myCost = vprob[0] * probscale;
+                            node(n).myCost = vprob[0];
                             break;
                         case 2:
                             node(n).myCost =
-                                (vprob[0] + vprob[1] - vprob[0] * vprob[1]) * probscale;
+                                vprob[0] + vprob[1] - vprob[0] * vprob[1];
                             break;
                         default:
                             throw std::runtime_error(
@@ -399,9 +397,9 @@ namespace raven
             }
 
             for (auto &n : myG)
-                std::cout << n.second.myName << " " << n.second.myCost / probscale << "\n";
+                std::cout << n.second.myName << " " << n.second.myCost << "\n";
 
-            std::cout << "\nfinal node " << userName(myEnd) << " probability " << ((double)node(myEnd).myCost) / probscale << "\n";
+            std::cout << "\nfinal node " << userName(myEnd) << " probability " << node(myEnd).myCost << "\n";
         }
         void cPathFinder::longest()
         {
