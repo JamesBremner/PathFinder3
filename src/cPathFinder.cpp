@@ -308,20 +308,20 @@ namespace raven
         {
             // The probabilities are stored in the link and node attribute myCost
 
-            // invalidate all node probabilities
-            for (auto &n : myG)
-                n.second.myCost = -1;
-
             // find all possible starting vertices
             std::vector<int> vSources;
             for (auto &n : myG)
             {
+                // invalidate node probabilities
+                n.second.myCost = -1;
+
+                // check for possible starting node
                 int outs = outDegree(n.second);
                 int ins = inDegree(n.second);
                 if (outs && (!ins))
                     vSources.push_back(node(n.second));
             }
-            // find all paths leading to target node frome every possible source
+            // find all paths leading to target node frome every possible start
             std::vector<std::vector<int>> vPath;
             for (int ni : vSources)
             {
