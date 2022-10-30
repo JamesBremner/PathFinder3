@@ -312,6 +312,10 @@ namespace raven
             */
             const double probscale = 10000;
 
+            // invalidate all node probabilities
+            for (auto &n : myG)
+                n.second.myCost = -1;
+
             // find all possible starting vertices
             std::vector<int> vSources;
             for (auto &n : myG)
@@ -320,6 +324,7 @@ namespace raven
                 int ins = inDegree(n.second);
                 if (outs && (!ins))
                     vSources.push_back(node(n.second));
+                n.second.myCost = probscale;
             }
             // find all paths leading to target node frome every possible source
             std::vector<std::vector<int>> vPath;
@@ -337,10 +342,6 @@ namespace raven
                     });
             }
 
-            // invalidate all node probabilities
-            for (auto &n : myG)
-                n.second.myCost = -1;
-
             // loop over all paths between start and end
             for (auto &p : vPath)
             {
@@ -355,22 +356,10 @@ namespace raven
                 {
                     if (n >= 0)
                     {
-                        // get the inlinks
-                        auto ins = inlinks(n);
-                        if (!ins.size())
-                        {
-                            // no inlinks
-                            // this is the initial node in path
-                            // set probability to 100%
-                            node(n).myCost = probscale;
-                            continue;
-                        }
-
-                        // calculate probability for each inlink
-                        // from previous nodes in path and link probabilities.
+                        // loop over inlinks
                         std::vector<double> vprob;
                         bool fOK = true;
-                        for (const auto l : ins)
+                        for (const auto l : inlinks(n) )
                         {
                             int prevNodeProb = node(l.first.first).myCost;
                             if (prevNodeProb == -1)
@@ -381,6 +370,7 @@ namespace raven
                                 break;
                             }
                             // store the probability contribution from this inlink
+                            // it is the product of the source node proabability and the link probability
                             vprob.push_back(
                                 (prevNodeProb / probscale) * l.second->myCost);
                         }
