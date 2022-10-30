@@ -18,6 +18,8 @@ namespace raven
             myPath.clear();
             mySource.clear();
             myDist.clear();
+            myStart = -1;
+            myEnd = -1;
             myPathCost = 0;
         }
 
@@ -300,11 +302,52 @@ namespace raven
         }
         void cPathFinder::longest()
         {
-            longestpaths(myStart);
-            pathPick(myEnd);
+            if (myStart > -1 && myEnd > -1)
+            {
+                // longest path between two specified nodes
+                longestpaths(myStart);
+                pathPick(myEnd);
+                return;
+            }
+            // longest path between any pair of nodes
+
+            // find candidates for start end end of longest path
+            std::vector<int> maxPath, startLeaves, endLeaves;
+            for (auto &n : myG)
+            {
+                int outs = n.second.outdegree();
+                int ins = inlinks(node(n.second)).size();
+                if (outs && (!ins))
+                    startLeaves.push_back(node(n.second));
+                if ((!outs) && ins)
+                    endLeaves.push_back(node(n.second));
+            }
+
+            // find longest path between every pair of candidate nodes
+            double maxCost = 0;
+            for (int s : startLeaves)
+            {
+                myStart = s;
+                for (int t : endLeaves)
+                {
+                    myEnd = t;
+                    longestpaths(s);
+                    pathPick(t);
+
+                    if (myPathCost > maxCost)
+                    {
+                        maxCost = myPathCost;
+                        maxPath = myPath;
+                    }
+                }
+            }
+            myPathCost = maxCost;
+            myPath = maxPath;
         }
+
         void cPathFinder::longestpaths(int start)
         {
+            //std::cout << "longestpaths " << userName(myStart) << " " << userName(myEnd) << "\n";
             int V = nodeCount();
 
             myDist.clear();
@@ -312,14 +355,14 @@ namespace raven
             myPred.clear();
             myPred.resize(V, -1);
 
-            std::vector<bool> sptSet(V,false); // sptSet[i] will be true if vertex i has been processed
+            std::vector<bool> sptSet(V, false); // sptSet[i] will be true if vertex i has been processed
 
             // Distance of source vertex from itself is always 0
             myDist[start] = 0;
             myPred[start] = 0;
 
             // Find shortest path for all vertices
-            int u = myStart;
+            int u = start;
             for (int count = 0; count < V - 1; count++)
             {
                 if (count)
@@ -470,7 +513,7 @@ namespace raven
             {
                 std::string sn;
 
-                if( first )
+                if (first)
                     first = false;
                 else
                     ss << " -> ";
@@ -479,7 +522,7 @@ namespace raven
 
                 if (sn == "???")
                     sn = std::to_string(n);
-                ss << sn ;
+                ss << sn;
             }
 
             if (myPath.size() && myDist.size() && myPathCost >= 0)
