@@ -57,7 +57,7 @@ namespace raven
                     return INT_MAX;
                 return it->second.myCost;
             }
-            int outdegree()
+            int outdegree() const
             {
                 return myLink.size();
             }
@@ -472,6 +472,19 @@ namespace raven
                     ret.push_back(&n.second);
                 }
                 return ret;
+            }
+
+            int inDegree( const cNode& n )
+            {
+                return inDegree( node( n ) );
+            }
+            int inDegree( int ni )
+            {
+                return inlinks( ni ).size();
+            }
+            int outDegree( const cNode& n )
+            {
+                return n.outdegree();
             }
 
         protected:

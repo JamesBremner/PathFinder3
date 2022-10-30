@@ -16,6 +16,7 @@ namespace raven
             not_open,
             costs,
             longest,
+            probs,
             spans,
             sales,
             hills,
@@ -124,6 +125,8 @@ namespace raven
 
             void longest();
             void longestpaths( int start );
+
+            void probs();
 
             /** Find paths from start to all nodes
              */

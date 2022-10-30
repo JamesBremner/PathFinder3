@@ -246,6 +246,10 @@ namespace raven
                 longest();
                 displayType = eCalculation::costs;
                 break;
+            case eCalculation::probs:
+                probs();
+                displayType = eCalculation::costs;
+                break;
             case eCalculation::paths:
                 allPaths();
                 break;
@@ -300,6 +304,115 @@ namespace raven
             paths(myStart);
             pathPick(myEnd);
         }
+        void cPathFinder::probs()
+        {
+            /* The probabilities are stored in the link and node attribute myCost
+              The graph class stores these as integers
+              So we need to scale the probs to the range [0 ... 10000]
+            */
+            const double probscale = 10000;
+
+            // find all possible starting vertices
+            std::vector<int> vSources;
+            for (auto &n : myG)
+            {
+                int outs = outDegree(n.second);
+                int ins = inDegree(n.second);
+                if (outs && (!ins))
+                    vSources.push_back(node(n.second));
+            }
+            // find all paths leading to target node frome every possible source
+            std::vector<std::vector<int>> vPath;
+            for (int ni : vSources)
+            {
+                std::cout << userName(ni) << "\n";
+                myStart = ni;
+                visitAllPaths(
+                    ni,
+                    myEnd,
+                    [&, this](int length) -> int
+                    {
+                        vPath.push_back(myPath);
+                        return 0;
+                    });
+            }
+
+            // invalidate all node probabilities
+            for (auto &n : myG)
+                n.second.myCost = -1;
+
+            // loop over all paths between start and end
+            for (auto &p : vPath)
+            {
+                std::cout << "\npath: ";
+                for (int n : p)
+                    if (n >= 0)
+                        std::cout << userName(n) << " ";
+                std::cout << "\n";
+
+                // loop over nodes in path
+                for (int n : p)
+                {
+                    if (n >= 0)
+                    {
+                        // get the inlinks
+                        auto ins = inlinks(n);
+                        if (!ins.size())
+                        {
+                            // no inlinks
+                            // this is the initial node in path
+                            // set probability to 100%
+                            node(n).myCost = probscale;
+                            continue;
+                        }
+
+                        // calculate probability for each inlink
+                        // from previous nodes in path and link probabilities.
+                        std::vector<double> vprob;
+                        bool fOK = true;
+                        for (const auto l : ins)
+                        {
+                            int prevNodeProb = node(l.first.first).myCost;
+                            if (prevNodeProb == -1)
+                            {
+                                // the previous node probability has not been calculated yet
+                                // no need to look at any more inlinks
+                                fOK = false;
+                                break;
+                            }
+                            // store the probability contribution from this inlink
+                            vprob.push_back(
+                                (prevNodeProb / probscale) * l.second->myCost);
+                        }
+                        // check if there is enough information
+                        // to calculate the probability for this node
+                        if (!fOK)
+                            continue;
+
+                        // all the previous nodes are calculated
+                        // calculate this node's probability
+                        switch (vprob.size())
+                        {
+                        case 1:
+                            node(n).myCost = vprob[0] * probscale;
+                            break;
+                        case 2:
+                            node(n).myCost =
+                                (vprob[0] + vprob[1] - vprob[0] * vprob[1]) * probscale;
+                            break;
+                        default:
+                            throw std::runtime_error(
+                                userName(n) + " has more than 2 inlinks, please refactor input");
+                        }
+                    }
+                }
+            }
+
+            for (auto &n : myG)
+                std::cout << n.second.myName << " " << n.second.myCost / probscale << "\n";
+
+            std::cout << "\nfinal node " << userName(myEnd) << " probability " << ((double)node(myEnd).myCost) / probscale << "\n";
+        }
         void cPathFinder::longest()
         {
             if (myStart > -1 && myEnd > -1)
@@ -347,7 +460,7 @@ namespace raven
 
         void cPathFinder::longestpaths(int start)
         {
-            //std::cout << "longestpaths " << userName(myStart) << " " << userName(myEnd) << "\n";
+            // std::cout << "longestpaths " << userName(myStart) << " " << userName(myEnd) << "\n";
             int V = nodeCount();
 
             myDist.clear();
@@ -624,7 +737,6 @@ namespace raven
                 }
                 for (int w : adjacent(v))
                 {
-
                     if (!myPath[w])
                         stack.push(w);
                 }
@@ -1719,9 +1831,9 @@ namespace raven
                         raven::set::cRunWatch aWatcher("visitor");
                         // this "visitor" is called whenever a possible path is found
 
-                        // for (int i = 0; i < pathlength; i++)
-                        //     std::cout << userName(myPath[i]) << " ";
-                        // std::cout << "\n";
+                        for (int i = 0; i < pathlength; i++)
+                            std::cout << userName(myPath[i]) << " ";
+                        std::cout << "\n";
 
                         for (int i = 0; i < pathlength; i++)
                         {

@@ -42,6 +42,11 @@ namespace raven
                 costs(true,true);
                 return eCalculation::longest;
              }
+             if (line.find("probs") != -1)
+             {
+                costs(true,true);
+                return eCalculation::probs;
+             }
             else if (line.find("water") != -1)
             {
                 bool pulse;
@@ -226,7 +231,7 @@ namespace raven
             myFinder.clear();
             if (directed)
                 myFinder.directed();
-            int cost;
+            double cost;
             int maxNegCost = 0;
             std::string line;
             while (std::getline(myFile, line))
