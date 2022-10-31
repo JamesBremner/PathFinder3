@@ -306,96 +306,94 @@ namespace raven
         void cPathFinder::probs()
         {
             // The probabilities are stored in the link and node attribute myCost
-
-            // store all paths leading to destination node
-            // starting from leaf nodes
-            std::vector<std::vector<int>> vPath;
+            // Mark all node probabilities as 'not yet calculated'
             for (auto &n : myG)
-            {
-                // invalidate node probability
                 n.second.myCost = -1;
 
-                // check for possible starting node
-                if (outDegree(n.second) && (!inDegree(n.second)))
-                {
-                    visitAllPaths(
-                        node(n.second),
-                        myEnd,
-                        [&, this](int length) -> int
-                        {
-                            vPath.push_back(myPath);
-                            return 0;
-                        });
-                }
-            }
-
-            // loop over all paths between start and end
-            for (auto &p : vPath)
+            // loop over nodes
+            for (auto &n : myG)
             {
-                std::cout << "\npath: ";
-                for (int n : p)
-                    if (n >= 0)
-                        std::cout << userName(n) << " ";
-                std::cout << "\n";
+                // check for possible starting node
+                // i.e one with out edges and no in edges
+                if (!(outDegree(n.second) && (!inDegree(n.second))))
+                    continue;
 
-                // loop over nodes in path
-                for (int n : p)
-                {
-                    if (n >= 0)
+                // iterate over all paths from starting node to target node
+                visitAllPaths(
+                    node(n.second),
+                    myEnd,
+                    [&, this](int length) -> int
                     {
-                        // loop over inlinks
-                        std::vector<double> vprob;
-                        bool fOK = true;
-                        for (const auto l : inlinks(n))
+                        // loop over nodes in path
+                        for (int n : myPath)
                         {
-                            double prevNodeProb = node(l.first.first).myCost;
-                            if (prevNodeProb == -1)
+                            if (n < 0)
+                                continue;
+
+                            // loop over inlinks
+                            std::vector<double> vprob;
+                            bool fOK = true;
+                            for (const auto l : inlinks(n))
                             {
-                                // the previous node probability has not been calculated yet
-                                // no need to look at any more inlinks
-                                fOK = false;
-                                break;
+                                double prevNodeProb = node(l.first.first).myCost;
+                                if (prevNodeProb == -1)
+                                {
+                                    // the previous node probability has not been calculated yet
+                                    // no need to look at any more inlinks
+                                    fOK = false;
+                                    break;
+                                }
+                                // store the probability contribution from this inlink
+                                // it is the product of the source node proabability and the link probability
+                                vprob.push_back(
+                                    prevNodeProb * l.second->myCost);
                             }
-                            // store the probability contribution from this inlink
-                            // it is the product of the source node proabability and the link probability
-                            vprob.push_back(
-                                prevNodeProb * l.second->myCost);
-                        }
-                        // check if there is enough information
-                        // to calculate the probability for this node
-                        if (!fOK)
-                            continue;
+                            // check if there is enough information
+                            // to calculate the probability for this node
+                            if (!fOK)
+                                break;
 
-                        // all the previous nodes are calculated
-                        // calculate this node's probability
-                        switch (vprob.size())
-                        {
-                        case 0:
-                            node(n).myCost = 1;
-                            break;
-                        case 1:
-                            node(n).myCost = vprob[0];
-                            break;
-                        case 2:
-                            node(n).myCost =
-                                vprob[0] + vprob[1] - vprob[0] * vprob[1];
-                            break;
-                        default:
-                            throw std::runtime_error(
-                                userName(n) + " has more than 2 inlinks, please refactor input");
+                            // all the previous nodes are calculated
+                            // calculate this node's probability
+                            switch (vprob.size())
+                            {
+                            case 0:
+                                //starting node, assume probability of 100%
+                                node(n).myCost = 1;
+                                break;
+
+                            case 1:
+                                // one inlink, prob is previous node prob times link probability
+                                node(n).myCost = vprob[0];
+                                break;
+
+                            case 2:
+                                // two inlinks
+                                node(n).myCost =
+                                    vprob[0] + vprob[1] - vprob[0] * vprob[1];
+                                break;
+                                
+                            default:
+                                /*  More then two inlinks
+                                The code does not handle this
+                                but note that multiple inlinks can alwayd be reduced to a series of
+                                nodes with 2 inlinks
+                                */
+                                throw std::runtime_error(
+                                    userName(n) + " has more than 2 inlinks, please refactor input");
+                            }
                         }
-                    }
-                }
+
+                        return 0;
+                    });
             }
-
-            // for (auto &n : myG)
-            //     std::cout << n.second.myName << " " << n.second.myCost << "\n";
 
             std::stringstream ss;
-            ss << "\nfinal node " << userName(myEnd) << " probability " 
-                << node(myEnd).myCost << "\n";
+            ss << "\nfinal node " << userName(myEnd) << " probability "
+               << node(myEnd).myCost << "\n";
             myResults = ss.str();
         }
+
         void cPathFinder::longest()
         {
             if (myStart > -1 && myEnd > -1)
