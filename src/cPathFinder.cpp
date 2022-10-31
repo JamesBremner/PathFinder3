@@ -248,8 +248,7 @@ namespace raven
                 break;
             case eCalculation::probs:
                 probs();
-                displayType = eCalculation::costs;
-                break;
+                return calc;
             case eCalculation::paths:
                 allPaths();
                 break;
@@ -308,33 +307,26 @@ namespace raven
         {
             // The probabilities are stored in the link and node attribute myCost
 
-            // find all possible starting vertices
-            std::vector<int> vSources;
+            // store all paths leading to destination node
+            // starting from leaf nodes
+            std::vector<std::vector<int>> vPath;
             for (auto &n : myG)
             {
-                // invalidate node probabilities
+                // invalidate node probability
                 n.second.myCost = -1;
 
                 // check for possible starting node
-                int outs = outDegree(n.second);
-                int ins = inDegree(n.second);
-                if (outs && (!ins))
-                    vSources.push_back(node(n.second));
-            }
-            // find all paths leading to target node frome every possible start
-            std::vector<std::vector<int>> vPath;
-            for (int ni : vSources)
-            {
-                std::cout << userName(ni) << "\n";
-                myStart = ni;
-                visitAllPaths(
-                    ni,
-                    myEnd,
-                    [&, this](int length) -> int
-                    {
-                        vPath.push_back(myPath);
-                        return 0;
-                    });
+                if (outDegree(n.second) && (!inDegree(n.second)))
+                {
+                    visitAllPaths(
+                        node(n.second),
+                        myEnd,
+                        [&, this](int length) -> int
+                        {
+                            vPath.push_back(myPath);
+                            return 0;
+                        });
+                }
             }
 
             // loop over all paths between start and end
@@ -396,10 +388,13 @@ namespace raven
                 }
             }
 
-            for (auto &n : myG)
-                std::cout << n.second.myName << " " << n.second.myCost << "\n";
+            // for (auto &n : myG)
+            //     std::cout << n.second.myName << " " << n.second.myCost << "\n";
 
-            std::cout << "\nfinal node " << userName(myEnd) << " probability " << node(myEnd).myCost << "\n";
+            std::stringstream ss;
+            ss << "\nfinal node " << userName(myEnd) << " probability " 
+                << node(myEnd).myCost << "\n";
+            myResults = ss.str();
         }
         void cPathFinder::longest()
         {

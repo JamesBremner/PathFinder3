@@ -289,6 +289,7 @@ int main()
             case eCalculation::reqs:
             case eCalculation::pickup:
             case eCalculation::alloc:
+            case eCalculation::probs:
                 s.text(
                     finder.resultsText(),
                     {5, 5});
