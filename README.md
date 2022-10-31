@@ -37,7 +37,7 @@ Calculation Options are:
  - __Maze__ Finds the path through a 2D grid maze. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Maze)
  - __Pickup__  Find reasonable routes for drivers that must pickup cargos and deliver them to locations. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Pickup)
   - __Allocation__ Finds an allocation of agents to tasks that optimizes the number of tasks completed. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Allocation)
-    - __Probabilities__ Finds the probability that an end node can be reached when links are available with specified probability. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Probabilities)
+  - __Probabilities__ Finds the probability that an end node can be reached when links are available with specified probability. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Probabilities)
 
 ## Installation
 
