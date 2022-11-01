@@ -26,22 +26,22 @@ Calculation Options are:
 
  - __Costs.__ Input specifies undirected links, link costs, starting and ending nodes, then uses the Dijsktra algorithm to find optimal path. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Costs)
  - __Longest__ Input specifies directed links, link costs, starting and ending nodes, then uses a modified Dijsktra algorithm to find longest or most expensive path.  Option to find longest path between any two nodes. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Longest)
- - __Spans__ Input specifies undirected links, with costs then uses Pim's algorithm to find minimum cost links that connect all nodes together. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Spans)
- - __Sales__  Input specifies undirected links, with costs then finds a route that will visit every node once. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Sales)
+ - __Spans__ Input specifies undirected links, with costs then uses Pim's algorithm to find minimum cost links that connect all nodes together. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Spans)
+ - __Sales__  Input specifies undirected links, with costs then finds a route that will visit every node once. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Sales)
  - __Cams__ Find a set of nodes that cover every link.  Input specifies undirected links.  [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Cams)
- - __Cliques__ Find the set of maximal cliques in a graph. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Cliques)
- - __Flows__ Find maximum flow through a graph.  [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Flows)
+ - __Cliques__ Find the set of maximal cliques in a graph. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Cliques)
+ - __Flows__ Find maximum flow through a graph.  [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Flows)
  - __Water__ Calulate shortest time to flow though pipe network with timed valve openings.
- - __Hills__ Find easiest path through hilly terrain. [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Hills)
- - __Prerequistes__ Finds paths through ordered requirements. "Before you can do B, you must have done A" [Detailed Documentation](https://github.com/JamesBremner/PathFinder2/wiki/Prerequisites)
- - __Maze__ Finds the path through a 2D grid maze. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Maze)
- - __Pickup__  Find reasonable routes for drivers that must pickup cargos and deliver them to locations. [Detailed Documentation](https://github.com/JamesBremner/PathFinder/wiki/Pickup)
+ - __Hills__ Find easiest path through hilly terrain. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Hills)
+ - __Prerequistes__ Finds paths through ordered requirements. "Before you can do B, you must have done A" [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Prerequisites)
+ - __Maze__ Finds the path through a 2D grid maze. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Maze)
+ - __Pickup__  Find reasonable routes for drivers that must pickup cargos and deliver them to locations. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Pickup)
   - __Allocation__ Finds an allocation of agents to tasks that optimizes the number of tasks completed. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Allocation)
   - __Probabilities__ Finds the probability that an end node can be reached when links are available with specified probability. [Detailed Documentation](https://github.com/JamesBremner/PathFinder3/wiki/Probabilities)
 
 ## Installation
 
- - Download load most recent release from https://github.com/JamesBremner/PathFinder/releases
+ - Download load most recent release from https://github.com/JamesBremner/PathFinder3/releases
  - Unzip
  - Double click file `PathFinder.exe`.
 
