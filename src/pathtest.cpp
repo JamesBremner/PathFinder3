@@ -102,6 +102,13 @@ main()
         sr.find("child2\tchore3") == -1 )
         throw std::runtime_error("chores.txt failed");
 
+    expected = "0.0306512";
+    reader.open("../dat/probs2.txt");
+    finder.probs();
+    if(finder.resultsText().find(expected) == -1 )
+        throw std::runtime_error("probs2.txt failed");
+
+
 
     // reader.open("../dat/karup.txt");
     // expected = "by -> bz -> bx -> ";
